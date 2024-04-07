@@ -1,0 +1,18 @@
+# Utilisation d'une image de Node.js
+FROM node:14
+
+# Création du répertoire de travail de l'application
+WORKDIR /app
+
+# Installation des dépendances
+COPY package.json ./
+RUN npm install
+
+# Copie du code source de l'application
+COPY . .
+
+# Exposition du port sur lequel l'application écoute
+EXPOSE 5400
+
+# Commande de démarrage de l'application
+CMD ["node", "main.js"]

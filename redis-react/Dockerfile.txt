@@ -1,0 +1,30 @@
+# Utilisation d'une image Node.js pour construire l'application React
+FROM node:14 as builder
+
+# Création du répertoire de travail de l'application
+WORKDIR /app
+
+# Copie du fichier package.json pour installer les dépendances
+COPY package.json .
+
+# Installation des dépendances
+RUN npm install
+
+# Copie du code source de l'application
+COPY . .
+
+# Construction de l'application React
+RUN npm run build
+
+# Utilisation d'une image légère nginx pour servir l'application construite
+FROM nginx:alpine
+
+# Copie des fichiers construits de l'application React dans le répertoire de travail nginx
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Exposition du port sur lequel nginx écoute
+EXPOSE 3000
+
+# Commande de démarrage de nginx
+
+CMD ["nginx", "-g", "daemon off;"]
